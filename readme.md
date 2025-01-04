@@ -1,176 +1,235 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project>
-    <name>Shop Bán Đồ Chơi Trẻ Em</name>
-    <description>Dự án PHP thuần xây dựng một website bán đồ chơi trẻ em với các tính năng như quản lý tài khoản, giỏ hàng, sản phẩm, và hệ thống quản trị.</description>
-    
-    <technologies>
-        <language>PHP</language>
-        <database>MySQL</database>
-        <frontend>
-            <technology>HTML</technology>
-            <technology>CSS</technology>
-            <technology>JavaScript</technology>
-            <framework>Bootstrap</framework>
-        </frontend>
-        <backend>
-            <libraries>
-                <library>firebase/php-jwt</library>
-                <library>vlucas/phpdotenv</library>
-            </libraries>
-        </backend>
-    </technologies>
-    
-    <features>
-        <user>
-            <feature>
-                <name>Đăng ký</name>
-                <description>Tạo tài khoản mới với thông tin cá nhân.</description>
-            </feature>
-            <feature>
-                <name>Đăng nhập</name>
-                <description>Xác thực người dùng bằng JWT và mật khẩu mã hóa.</description>
-            </feature>
-            <feature>
-                <name>Quản lý thông tin cá nhân</name>
-                <description>Xem và chỉnh sửa thông tin cá nhân.</description>
-            </feature>
-            <feature>
-                <name>Quản lý giỏ hàng</name>
-                <description>Thêm, sửa, xóa sản phẩm trong giỏ hàng.</description>
-            </feature>
-            <feature>
-                <name>Đặt hàng</name>
-                <description>Đặt hàng từ giỏ hàng, quản lý đơn hàng và xem chi tiết đơn hàng.</description>
-            </feature>
-            <feature>
-                <name>Đánh giá sản phẩm</name>
-                <description>Thêm, xem, và xóa đánh giá sản phẩm.</description>
-            </feature>
-        </user>
-        <admin>
-            <feature>
-                <name>Quản lý sản phẩm</name>
-                <description>Thêm, sửa, và xóa sản phẩm, bao gồm hình ảnh.</description>
-            </feature>
-            <feature>
-                <name>Quản lý danh mục</name>
-                <description>Thêm, sửa, và xóa danh mục sản phẩm.</description>
-            </feature>
-            <feature>
-                <name>Quản lý đơn hàng</name>
-                <description>Xem danh sách đơn hàng, cập nhật trạng thái, và xem chi tiết đơn hàng.</description>
-            </feature>
-            <feature>
-                <name>Quản lý người dùng</name>
-                <description>Xem danh sách người dùng và xóa người dùng.</description>
-            </feature>
-        </admin>
-    </features>
-    
-    <setup>
-        <step>
-            <name>Clone repository từ Git</name>
-            <command>git clone &lt;URL của repository&gt;</command>
-            <description>Clone mã nguồn dự án từ GitHub về máy cục bộ.</description>
-        </step>
-        <step>
-            <name>Cài đặt thư viện Composer</name>
-            <command>composer install</command>
-            <description>Cài đặt các thư viện PHP cần thiết bằng Composer.</description>
-        </step>
-        <step>
-            <name>Cấu hình file .env</name>
-            <description>Tạo file .env để lưu thông tin cấu hình cơ sở dữ liệu, JWT, và mã hóa AES.</description>
-            <example>
-                DB_HOST=127.0.0.1
-                DB_NAME=toy_shop
-                DB_USER=root
-                DB_PASSWORD=
-                JWT_SECRET=your_secret_key
-                ENCRYPTION_KEY=32_character_secret_key
-                ENCRYPTION_IV=16_character_iv
-            </example>
-        </step>
-        <step>
-            <name>Tạo cơ sở dữ liệu</name>
-            <command>mysql -u root -p toy_shop &lt; database.sql</command>
-            <description>Nhập file SQL để tạo bảng trong cơ sở dữ liệu MySQL.</description>
-        </step>
-        <step>
-            <name>Khởi động server PHP</name>
-            <command>php -S localhost:8000 -t public</command>
-            <description>Khởi chạy server PHP để truy cập ứng dụng qua trình duyệt.</description>
-        </step>
-    </setup>
-    
-    <routes>
-        <frontend>
-            <route>
-                <url>/index.php?page=home</url>
-                <description>Trang chủ hiển thị danh sách sản phẩm.</description>
-            </route>
-            <route>
-                <url>/index.php?page=product&id={product_id}</url>
-                <description>Trang chi tiết sản phẩm.</description>
-            </route>
-            <route>
-                <url>/index.php?page=cart</url>
-                <description>Trang giỏ hàng của người dùng.</description>
-            </route>
-            <route>
-                <url>/index.php?page=checkout</url>
-                <description>Trang thanh toán đơn hàng.</description>
-            </route>
-            <route>
-                <url>/index.php?page=profile</url>
-                <description>Trang thông tin cá nhân người dùng.</description>
-            </route>
-            <route>
-                <url>/index.php?page=orders</url>
-                <description>Trang danh sách đơn hàng của người dùng.</description>
-            </route>
-        </frontend>
-        <api>
-            <route>
-                <url>/api/users</url>
-                <method>GET</method>
-                <description>Lấy danh sách người dùng.</description>
-            </route>
-            <route>
-                <url>/api/products</url>
-                <method>GET</method>
-                <description>Lấy danh sách sản phẩm.</description>
-            </route>
-            <route>
-                <url>/api/login</url>
-                <method>POST</method>
-                <description>API đăng nhập người dùng, trả về token JWT.</description>
-            </route>
-            <route>
-                <url>/api/register</url>
-                <method>POST</method>
-                <description>API đăng ký tài khoản người dùng mới.</description>
-            </route>
-            <route>
-                <url>/api/orders</url>
-                <method>POST</method>
-                <description>API đặt hàng.</description>
-            </route>
-        </api>
-    </routes>
-    
-    <commands>
-        <command>
-            <name>Khởi động server PHP</name>
-            <value>php -S localhost:8000 -t public</value>
-        </command>
-        <command>
-            <name>Cài đặt thư viện</name>
-            <value>composer install</value>
-        </command>
-        <command>
-            <name>Import cơ sở dữ liệu</name>
-            <value>mysql -u root -p toy_shop &lt; database.sql</value>
-        </command>
-    </commands>
-</project>
+
+# Shop Bán Đồ Chơi Trẻ Em
+
+Shop Bán Đồ Chơi Trẻ Em là một dự án PHP thuần, xây dựng hệ thống website bán đồ chơi trẻ em với các tính năng như quản lý tài khoản, sản phẩm, giỏ hàng, đánh giá, và hệ thống quản trị.
+
+---
+
+## 🚀 **Tính năng**
+
+### **Người dùng**
+1. **Đăng ký (Register):**
+   - Tạo tài khoản mới với thông tin như username, email, mật khẩu, số điện thoại, địa chỉ.
+   - Kiểm tra tài khoản/email đã tồn tại.
+   - Validate dữ liệu đầu vào.
+
+2. **Đăng nhập (Login):**
+   - Xác thực bằng username/email và mật khẩu.
+   - Trả về token JWT khi đăng nhập thành công.
+
+3. **Quản lý thông tin cá nhân (Profile):**
+   - Xem và chỉnh sửa thông tin cá nhân.
+   - Thay đổi mật khẩu.
+
+4. **Giỏ hàng (Cart):**
+   - Thêm sản phẩm vào giỏ hàng.
+   - Xóa sản phẩm khỏi giỏ hàng.
+   - Cập nhật số lượng sản phẩm trong giỏ.
+
+5. **Đặt hàng (Orders):**
+   - Đặt hàng từ giỏ hàng.
+   - Xem danh sách đơn hàng.
+   - Xem chi tiết đơn hàng.
+
+6. **Đánh giá sản phẩm (Reviews):**
+   - Thêm, xem, và xóa đánh giá sản phẩm.
+
+---
+
+### **Admin**
+1. **Quản lý sản phẩm:**
+   - Thêm, sửa, và xóa sản phẩm.
+   - Quản lý hình ảnh sản phẩm.
+
+2. **Quản lý danh mục sản phẩm:**
+   - Thêm, sửa, và xóa danh mục.
+
+3. **Quản lý đơn hàng:**
+   - Xem danh sách đơn hàng.
+   - Cập nhật trạng thái đơn hàng (Pending → Confirmed → In Transit → Completed → Cancelled).
+
+4. **Quản lý người dùng:**
+   - Xem danh sách người dùng.
+   - Xóa người dùng.
+
+---
+
+## 🛠 **Công nghệ sử dụng**
+
+1. **Ngôn ngữ lập trình:**
+   - PHP thuần.
+
+2. **Cơ sở dữ liệu:**
+   - MySQL.
+
+3. **Thư viện & Công cụ:**
+   - `firebase/php-jwt`: Quản lý xác thực bằng JWT.
+   - `vlucas/phpdotenv`: Quản lý biến môi trường.
+   - `openssl_encrypt`: Mã hóa và giải mã mật khẩu (AES-256-CBC).
+
+4. **Frontend:**
+   - HTML, CSS, JavaScript.
+   - Bootstrap (nếu sử dụng giao diện quản trị).
+
+5. **Server:**
+   - Apache (XAMPP hoặc LAMP).
+
+---
+
+## 📂 **Cấu trúc thư mục**
+
+```plaintext
+toy-shop/
+├── api/
+│   ├── routes.php             # Route API
+├── config/
+│   ├── database.php           # Cấu hình kết nối cơ sở dữ liệu
+├── controllers/
+│   ├── AuthController.php     # Controller xử lý đăng nhập, đăng ký
+│   ├── UserController.php     # Controller quản lý người dùng
+│   ├── ProductController.php  # Controller quản lý sản phẩm
+│   ├── CategoryController.php # Controller quản lý danh mục
+│   ├── OrderController.php    # Controller quản lý đơn hàng
+│   ├── CartController.php     # Controller giỏ hàng
+│   ├── ReviewController.php   # Controller đánh giá sản phẩm
+├── helpers/
+│   ├── EncryptionHelper.php   # Mã hóa/giải mã dữ liệu
+├── models/
+│   ├── User.php               # Model người dùng
+│   ├── Product.php            # Model sản phẩm
+│   ├── Category.php           # Model danh mục
+│   ├── Order.php              # Model đơn hàng
+│   ├── Cart.php               # Model giỏ hàng
+│   ├── Review.php             # Model đánh giá
+├── public/
+│   ├── index.php              # Điểm khởi đầu ứng dụng
+├── views/
+│   ├── home.php               # Trang chủ
+│   ├── login.php              # Trang đăng nhập
+│   ├── register.php           # Trang đăng ký
+│   ├── profile.php            # Trang thông tin cá nhân
+│   ├── cart.php               # Trang giỏ hàng
+│   ├── checkout.php           # Trang thanh toán
+│   ├── product.php            # Trang chi tiết sản phẩm
+│   ├── orders/
+│   │   ├── list.php           # Trang danh sách đơn hàng
+│   │   ├── details.php        # Trang chi tiết đơn hàng
+│   ├── admin/
+│   │   ├── dashboard.php      # Dashboard quản trị
+│   │   ├── products/          # Quản lý sản phẩm
+│   │   ├── categories/        # Quản lý danh mục
+│   │   ├── orders/            # Quản lý đơn hàng
+│   │   ├── users/             # Quản lý người dùng
+├── .env                       # File cấu hình môi trường
+├── composer.json              # Cấu hình Composer
+└── README.md                  # Hướng dẫn dự án
+```
+
+---
+
+## 🔧 **Cách cài đặt**
+
+1. **Clone repository từ GitHub:**
+   ```bash
+   git clone <URL của repository>
+   cd toy-shop
+   ```
+
+2. **Cài đặt thư viện bằng Composer:**
+   ```bash
+   composer install
+   ```
+
+3. **Cấu hình file `.env`:**
+   - Copy file `.env.example` thành `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Cập nhật thông tin:
+     ```plaintext
+     DB_HOST=127.0.0.1
+     DB_NAME=toy_shop
+     DB_USER=root
+     DB_PASSWORD=
+     JWT_SECRET=your_secret_key
+     ENCRYPTION_KEY=your_32_byte_key
+     ENCRYPTION_IV=your_16_byte_iv
+     ```
+
+4. **Tạo cơ sở dữ liệu:**
+   - Tạo database:
+     ```sql
+     CREATE DATABASE toy_shop;
+     ```
+   - Import file `database.sql`:
+     ```bash
+     mysql -u root -p toy_shop < database.sql
+     ```
+
+5. **Khởi động server PHP:**
+   ```bash
+   php -S localhost:8000 -t public
+   ```
+
+6. **Truy cập ứng dụng:**
+   - **Frontend:** `http://localhost:8000`
+   - **API:** `http://localhost:8000/api`
+
+---
+
+## ⚙️ **Lệnh cần thiết**
+
+- **Khởi động server PHP:**
+  ```bash
+  php -S localhost:8000 -t public
+  ```
+
+- **Cài đặt thư viện:**
+  ```bash
+  composer install
+  ```
+
+- **Import cơ sở dữ liệu:**
+  ```bash
+  mysql -u root -p toy_shop < database.sql
+  ```
+
+---
+
+## 📋 **Danh sách route**
+
+### **Frontend**
+| URL                                | Mô tả                       |
+|------------------------------------|-----------------------------|
+| `/index.php?page=home`             | Trang chủ                  |
+| `/index.php?page=product&id={id}`  | Trang chi tiết sản phẩm    |
+| `/index.php?page=cart`             | Trang giỏ hàng             |
+| `/index.php?page=checkout`         | Trang thanh toán           |
+| `/index.php?page=profile`          | Trang thông tin cá nhân    |
+| `/index.php?page=orders`           | Trang danh sách đơn hàng   |
+
+### **API**
+| URL                | Phương thức | Mô tả                       |
+|--------------------|-------------|-----------------------------|
+| `/api/users`       | GET         | Lấy danh sách người dùng    |
+| `/api/products`    | GET         | Lấy danh sách sản phẩm      |
+| `/api/login`       | POST        | Đăng nhập                   |
+| `/api/register`    | POST        | Đăng ký                     |
+| `/api/orders`      | POST        | Đặt hàng                    |
+
+---
+
+## 🛡 **Bảo mật**
+- Mật khẩu được mã hóa bằng AES-256-CBC với khóa và IV từ file `.env`.
+- API xác thực bằng JWT.
+
+---
+
+## 👨‍💻 **Tác giả**
+- **Họ tên:** [Tên của bạn]
+- **Email:** [Email của bạn]
+- **GitHub:** [Link GitHub của bạn]
+
+---
+
+Nếu bạn cần thêm chi tiết hoặc hỗ trợ, hãy liên hệ tôi qua email hoặc GitHub! 🚀
