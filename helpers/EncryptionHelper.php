@@ -3,25 +3,24 @@
 
 class EncryptionHelper
 {
-    private static $method = 'AES-256-CBC'; // Phương thức mã hóa
-    private static $key;
+    private $key;
+    private $iv;
 
-    public static function setKey($key)
+    public function __construct()
     {
-        self::$key = $key;
+        $this->key = $_ENV['ENCRYPTION_KEY'];
+        $this->iv = $_ENV['ENCRYPTION_IV'];
     }
 
-    public static function encrypt($data)
+    // Hàm mã hóa
+    public function encrypt($data)
     {
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::$method));
-        $encrypted = openssl_encrypt($data, self::$method, self::$key, 0, $iv);
-        return base64_encode($encrypted . '::' . $iv); // Ghép mã hóa + IV
+        return openssl_encrypt($data, 'AES-256-CBC', $this->key, 0, $this->iv);
     }
 
-    public static function decrypt($data)
+    // Hàm giải mã
+    public function decrypt($encryptedData)
     {
-        $data = base64_decode($data);
-        list($encryptedData, $iv) = explode('::', $data, 2);
-        return openssl_decrypt($encryptedData, self::$method, self::$key, 0, $iv);
+        return openssl_decrypt($encryptedData, 'AES-256-CBC', $this->key, 0, $this->iv);
     }
 }

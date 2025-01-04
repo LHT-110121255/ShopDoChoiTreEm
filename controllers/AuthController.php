@@ -1,14 +1,17 @@
 <?php
 
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../helpers/EncryptionHelper.php'; // Thêm helper mã hóa
 
 class AuthController
 {
     private $userModel;
+    private $encryptionHelper;
 
     public function __construct($pdo)
     {
         $this->userModel = new User($pdo);
+        $this->encryptionHelper = new EncryptionHelper();
     }
 
     public function register($data)
@@ -34,13 +37,13 @@ class AuthController
                 }
             }
 
-            // Mã hóa mật khẩu
-            $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+            // Mã hóa mật khẩu bằng AES-256-CBC
+            $encryptedPassword = $this->encryptionHelper->encrypt($data['password']);
 
             // Tạo người dùng mới
             return $this->userModel->create(
                 $data['username'],
-                $hashedPassword,
+                $encryptedPassword,
                 $data['email'],
                 $data['fullname'] ?? '',
                 $data['phone'] ?? '',
@@ -75,8 +78,11 @@ class AuthController
                 throw new Exception('User not found.');
             }
 
+            // Giải mã mật khẩu trong cơ sở dữ liệu
+            $decryptedPassword = $this->encryptionHelper->decrypt($user['password']);
+
             // Kiểm tra mật khẩu
-            if (!password_verify($data['password'], $user['password'])) {
+            if ($data['password'] !== $decryptedPassword) {
                 throw new Exception('Invalid password.');
             }
 
@@ -91,6 +97,7 @@ class AuthController
 
             return [
                 'message' => 'Login successful.',
+                'success' => true,
                 'token' => $jwt,
             ];
         } catch (Exception $e) {
